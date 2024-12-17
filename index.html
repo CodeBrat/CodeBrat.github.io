@@ -25,10 +25,6 @@
 
   <script>
     var player;
-    var videoLink;
-    var startTime;
-    var endTime;
-    var playbackSpeed;
     let interval;
 
     var tag = document.createElement('script');
@@ -52,20 +48,19 @@
     }
 
     function onPlayerReady(event) {
-      // event.target.playVideo();
-      // event.target.setPlaybackRate(playbackSpeed);
+      
     }
 
     function playVideo() {
-      videoLink = document.getElementById("videoLink").value;
-      startTime = parseFloat(document.getElementById("startTime").value);
-      endTime = parseFloat(document.getElementById("endTime").value) || 0;
-      playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
+      const videoLink = document.getElementById("videoLink").value;
+      const startTime = parseInt(document.getElementById("startTime").value);
+      const endTime = parseInt(document.getElementById("endTime").value) || 0;
+      const playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
 
-      if (!videoLink || isNaN(startTime) || isNaN(endTime) || isNaN(playbackSpeed)) {
-        alert("Please enter valid values.");
-        return;
-      } else {
+      if (!videoLink && !isNaN(startTime) && isNaN(endTime) && start < end) {
+        player.seekTo(startTime);
+        player.setPlaybackRate(playbackSpeed);
+        player.playVideo();
         clearInterval(interval);
         interval = setInterval(() => {
           const currentTime = player.getCurrentTime();
@@ -73,6 +68,9 @@
             player.seekTo(startTime);
           }
         }, 1000);
+      } else {
+        alert("Please enter valid values.");
+        return;
       }
       
     }
