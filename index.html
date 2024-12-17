@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>YouTube Video Player with Controls</title>
+</head>
+
+<body>
+
+  <label for="videoLink">Video Link:</label>
+  <input type="text" id="videoLink" placeholder="Enter YouTube video URL">
+  <br>
+  <label for="startTime">Start Time (seconds):</label>
+  <input type="number" id="startTime" min="0" value="0">
+  <br>
+  <label for="endTime">End Time (seconds):</label>
+  <input type="number" id="endTime" min="0">
+  <br>
+  <label for="playbackSpeed">Playback Speed:</label>
+  <input type="number" id="playbackSpeed" step="0.1" value="1">
+  <br>
+  <button onclick="playVideo()">Play Video</button>
+  <button onclick="pauseVideo()">Pause Video</button>
+
+  <div id="player"></div>
+
+  <script>
+    var player;
+    var videoLink;
+    var startTime;
+    var endTime;
+    var playbackSpeed;
+
+    function playVideo() {
+      videoLink = document.getElementById("videoLink").value;
+      startTime = parseFloat(document.getElementById("startTime").value);
+      endTime = parseFloat(document.getElementById("endTime").value) || 0;
+      playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
+
+      if (!videoLink || isNaN(startTime) || isNaN(endTime) || isNaN(playbackSpeed)) {
+        alert("Please enter valid values.");
+        return;
+      }
+
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        videoId: extractVideoId(videoLink),
+        playerVars: {
+          'playsinline': 1
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+      event.target.setPlaybackRate(playbackSpeed);
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (endTime > 0) {
+          setTimeout(function() {
+            player.stopVideo();
+          }, (endTime - startTime) * 1000);
+        }
+      }
+    }
+
+    function pauseVideo() {
+        if (player && player.pauseVideo) {
+            player.pauseVideo();
+        }
+    }
+
+
+    function extractVideoId(url) {
+      var regExp = /.*(?:http:\/\/googleusercontent.com\/youtube\.com\/1\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
+      var match = url.match(regExp);
+      return (match && match[1]) || null;
+    }
+  </script>
+
+</body>
+
+</html>
