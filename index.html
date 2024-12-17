@@ -30,6 +30,32 @@
     var startTime;
     var endTime;
     var playbackSpeed;
+    let interval;
+
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        videoId: extractVideoId(videoLink),
+        playerVars: {
+          'playsinline': 1,
+          'origin': 'https://www.youtube.com'
+        },
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      // event.target.playVideo();
+      // event.target.setPlaybackRate(playbackSpeed);
+    }
 
     function playVideo() {
       videoLink = document.getElementById("videoLink").value;
@@ -41,41 +67,13 @@
         alert("Please enter valid values.");
         return;
       }
-
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
-
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '390',
-        width: '640',
-        videoId: extractVideoId(videoLink),
-        playerVars: {
-          'playsinline': 1
-        },
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
+      clearInterval(interval);
+      interval = setInterval(() => {
+        const currentTime = player.getCurrentTime();
+        if(currentTime >= endTime){
+          player.seekTo(startTime);
         }
-      });
-    }
-
-    function onPlayerReady(event) {
-      event.target.playVideo();
-      event.target.setPlaybackRate(playbackSpeed);
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.PLAYING) {
-        if (endTime > 0) {
-          setTimeout(function() {
-            player.stopVideo();
-          }, (endTime - startTime) * 1000);
-        }
-      }
+      }, 1000);
     }
 
     function pauseVideo() {
@@ -83,7 +81,6 @@
             player.pauseVideo();
         }
     }
-
 
     function extractVideoId(url) {
       var regExp = /.*(?:http:\/\/googleusercontent.com\/youtube\.com\/1\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
