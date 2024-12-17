@@ -20,7 +20,6 @@
   <input type="number" id="playbackSpeed" step="0.1" value="1">
   <br>
   <button onclick="playVideo()">Play Video</button>
-  <button onclick="pauseVideo()">Pause Video</button>
 
   <div id="player"></div>
 
@@ -66,20 +65,16 @@
       if (!videoLink || isNaN(startTime) || isNaN(endTime) || isNaN(playbackSpeed)) {
         alert("Please enter valid values.");
         return;
+      } else {
+        clearInterval(interval);
+        interval = setInterval(() => {
+          const currentTime = player.getCurrentTime();
+          if(currentTime >= endTime){
+            player.seekTo(startTime);
+          }
+        }, 1000);
       }
-      clearInterval(interval);
-      interval = setInterval(() => {
-        const currentTime = player.getCurrentTime();
-        if(currentTime >= endTime){
-          player.seekTo(startTime);
-        }
-      }, 1000);
-    }
-
-    function pauseVideo() {
-        if (player && player.pauseVideo) {
-            player.pauseVideo();
-        }
+      
     }
 
     function extractVideoId(url) {
