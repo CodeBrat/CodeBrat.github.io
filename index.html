@@ -46,11 +46,10 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     function onYouTubeIframeAPIReady() {
-      let videoLink = document.getElementById("videoLink").value;
+      
       player = new YT.Player('player', {
         height: '390',
         width: '640',
-        videoId: extractVideoId(videoLink),
         playerVars: {
           'playsinline': 1,
           'origin': 'https://www.youtube.com'
@@ -66,11 +65,14 @@
     }
 
     function playSection() {
+      let videoLink = document.getElementById("videoLink").value;
+      const videoId = extractVideoId(videoLink);
       const start = parseInt(document.getElementById("start").value);
       const end = parseInt(document.getElementById("end").value) || 0;
       const playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
 
-      if (!isNaN(start) && !isNaN(end) && start < end) {
+      if (videoId && !isNaN(start) && !isNaN(end) && start < end) {
+        player.loadVideoById(videoId)
         player.seekTo(start);
         player.setPlaybackRate(playbackSpeed);
         player.playVideo();
