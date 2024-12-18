@@ -65,26 +65,24 @@
 
     function playVideo() {
       const videoLink = document.getElementById("videoLink").value;
-      const startTime = parseInt(document.getElementById("startTime").value);
-      const endTime = parseInt(document.getElementById("endTime").value) || 0;
+      const start = parseInt(document.getElementById("start").value);
+      const end = parseInt(document.getElementById("end").value) || 0;
       const playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
 
-      if (!videoLink && !isNaN(startTime) && isNaN(endTime) && start < end) {
-        player.seekTo(startTime);
+      if (!isNaN(start) && isNaN(end) && start < end) {
+        player.seekTo(start);
         player.setPlaybackRate(playbackSpeed);
         player.playVideo();
         clearInterval(interval);
         interval = setInterval(() => {
           const currentTime = player.getCurrentTime();
-          if(currentTime >= endTime){
-            player.seekTo(startTime);
+          if(currentTime >= end){
+            player.seekTo(start);
           }
         }, 1000);
       } else {
         alert("Please enter valid values.");
-        return;
       }
-      
     }
 
     function extractVideoId(url) {
