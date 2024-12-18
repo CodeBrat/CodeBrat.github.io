@@ -38,6 +38,7 @@
   <script>
     let player;
     let interval;
+    const videoLink = document.getElementById("videoLink").value;
 
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
@@ -64,7 +65,6 @@
     }
 
     function playVideo() {
-      const videoLink = document.getElementById("videoLink").value;
       const start = parseInt(document.getElementById("start").value);
       const end = parseInt(document.getElementById("end").value) || 0;
       const playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
