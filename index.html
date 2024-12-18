@@ -72,7 +72,7 @@
       const playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
 
       if (videoId && !isNaN(start) && !isNaN(end) && start < end) {
-        player.loadVideoById(videoId)
+        player.loadVideoById(videoId, start)
         player.seekTo(start);
         player.setPlaybackRate(playbackSpeed);
         player.playVideo();
