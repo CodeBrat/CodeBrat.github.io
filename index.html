@@ -70,7 +70,7 @@
       const end = parseInt(document.getElementById("end").value) || 0;
       const playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
 
-      if (!isNaN(start) && isNaN(end) && start < end) {
+      if (videoLink && !isNaN(start) && !isNaN(end) && start < end) {
         player.seekTo(start);
         player.setPlaybackRate(playbackSpeed);
         player.playVideo();
