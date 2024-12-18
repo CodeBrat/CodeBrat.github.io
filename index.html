@@ -39,7 +39,6 @@
   <script>
     let player;
     let interval;
-    const videoLink = document.getElementById("videoLink").value;
 
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
@@ -47,6 +46,7 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     function onYouTubeIframeAPIReady() {
+      let videoLink = document.getElementById("videoLink").value;
       player = new YT.Player('player', {
         height: '390',
         width: '640',
@@ -70,7 +70,7 @@
       const end = parseInt(document.getElementById("end").value) || 0;
       const playbackSpeed = parseFloat(document.getElementById("playbackSpeed").value);
 
-      if (videoLink && !isNaN(start) && !isNaN(end) && start < end) {
+      if (!isNaN(start) && !isNaN(end) && start < end) {
         player.seekTo(start);
         player.setPlaybackRate(playbackSpeed);
         player.playVideo();
